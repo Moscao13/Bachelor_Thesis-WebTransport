@@ -1,0 +1,11 @@
+{
+    "name": "webtransport-first-try",
+    "version": "0.0.1",
+    "description": "Socket.IO with WebTransport",
+    "private": true,
+    "type": "module",
+    "dependencies": {
+        "@fails-components/webtransport": "^0.3.1",
+        "socket.io": "^4.7.2"
+    }
+}

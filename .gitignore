@@ -1,0 +1,6 @@
+./go/client/cert.pem
+./go/server/cert.pem
+./go/server/key.pem
+
+./nodejs/cert.pem
+./nodejs/key.pem
