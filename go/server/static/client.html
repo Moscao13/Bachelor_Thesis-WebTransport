@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Transport simple client</title>
+
+    <h1>Server says: <p id="server_response"></p></h1>
+</head>
+<body>
+    <script>
+
+        const wt = this.initConnection("https://localhost/")
+
+        const data = this.receiveFromIncomingStream(wt.incomingUnidirectionalStreams).toString()
+
+        console.log(`Data: ${data}`)
+        document.querySelector("#server_response").innerHTML = data
+
+        function initConnection(url){
+            const transport = new WebTransport(url)
+            transport.ready.then(() => {
+                console.log("WebTransport connection ready!")
+            }).catch((err) => {
+                console.error(`An error occurred while opening the connection: ${err}`)
+                return null
+            })
+
+            return transport
+        }
+
+        function closeConnection(transport){
+            transport.closed.then(() => {
+                console.log("WebTransport connection successfully closed!")
+            }).catch((err) => {
+                console.error(`An error occurred while closing the connection: ${err}`)
+            })
+        }
+
+        async function readData(receiveStream){
+            const reader = receiveStream.getReader()
+            let data
+            reader.read().then((done, value) => {
+                if(!done) return null
+                return data
+            }).catch((error) => {
+                console.error(`An error occurred while reading from the incoming stream: ${error}`)
+                return null
+            })
+        }
+
+        function writeOnOutgoingStream(outgoingStream, data) {
+            const writer = outgoingStream.getWriter()
+            writer.write(data).then(() => {
+                writer.close()
+                console.log("Data was successfully sent!")
+            }).catch((error) => {
+                console.error(`An error occurred while writing to the outgoing stream: ${error}`)
+            })
+        }
+
+        function receiveFromIncomingStream(incomingStream) {
+            const reader = incomingStream.getReader()
+
+            let data
+
+            reader.read().then((done, value) => {
+                if(!done){
+                    return null
+                }
+                const data = readData(value)
+                return data
+            }).catch((error) => {
+                console.error(`An error occurred while reading from incoming stream: ${error}`)
+                return null
+            })
+        }
+    </script>
+</body>
+</html>

@@ -64,7 +64,7 @@ func main() {
 		log.Println("Bidirectional stream opened")
 
 		/// Reading message from client
-		hellofromclient := make([]byte, 12)
+		hellofromclient := make([]byte, 13)
 
 		num, rdErr := bistream.Read(hellofromclient)
 
@@ -90,9 +90,12 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		log.Println("Root!!")
 
-		w.WriteHeader(200)
+		w.WriteHeader(205)
+
 		hello := "Hello there"
-		w.Write([]byte(hello))
+		count, _ := w.Write([]byte(hello))
+		log.Printf("write count: %d\n", count)
+
 	})
 
 	log.Printf("Server ready to serve to %s at port %d", s.H3.Addr, s.H3.Port)
@@ -100,4 +103,5 @@ func main() {
 	if err := s.ListenAndServeTLS(certFile, keyFile); err != nil {
 		log.Printf("ciao %s fine", err)
 	}
+
 }

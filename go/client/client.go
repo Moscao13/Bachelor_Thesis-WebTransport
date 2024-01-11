@@ -19,7 +19,8 @@ func main() {
 	}
 
 	h3rt := &http3.RoundTripper{
-		TLSClientConfig: tconfig,
+		TLSClientConfig:    tconfig,
+		DisableCompression: true,
 	}
 
 	/// Setting the client webtransport with http3 and tls configurations
@@ -28,8 +29,7 @@ func main() {
 	}
 
 	/// Calling the endpoint with webtransport protocol
-	rsp, conn, dialErr := d.Dial(context.Background(), "https://localhost:443/webtransport", nil)
-	defer rsp.Body.Close()
+	rsp, conn, dialErr := d.Dial(context.Background(), "https://localhost/webtransport", nil)
 
 	log.Printf("Status code: %d", rsp.StatusCode)
 
@@ -37,6 +37,17 @@ func main() {
 		log.Printf("Error while calling endpoint: %s\nShutting down...", dialErr)
 		return
 	}
+	defer rsp.Body.Close()
+
+	// body := make([]byte, 12)
+
+	// log.Printf("body len: %d\n", len(body))
+	// log.Printf("content len: %d\n", rsp.ContentLength)
+	// count, errore := rsp.Body.Read(body)
+	// log.Println(errore.Error())
+	// log.Printf("read count: %d\n", count)
+
+	// log.Printf("Body: %s", body)
 
 	/// Opening unidirectional incoming stream
 	rcv, uniErr := conn.AcceptUniStream(context.Background())
@@ -78,7 +89,7 @@ func main() {
 	log.Printf("Sending to client string: %s", hellofromclient)
 
 	/// Waiting for server response
-	hellofromserver := make([]byte, 12)
+	hellofromserver := make([]byte, 13)
 
 	rdnum, birderr := bistream.Read(hellofromserver)
 
