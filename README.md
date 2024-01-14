@@ -1,6 +1,6 @@
 # Bachelor Thesis-WebTransport
 
-Thesis activity for Computer engineer bachelor degree at "Università degli studi di Bologna", Italy.
+Thesis activity for Computer engineering bachelor degree at "Università degli studi di Bologna", Italy.
 
 ## Getting Started
 
@@ -9,3 +9,11 @@ It relies on HTTP/3 application protocol and introduce a new transport layer pro
 The heart of the protocol is multiplexed connection made of sessions and streams.
 
 WebTransport is very young. Its first draft was released on February 17th 2021. It is already a draft and It has not been standardized by IETF yet.
+
+## Credit
+
+Libraries:
+
+* NodeJs: [webtransport](https://github.com/fails-components/webtransport) by [@fails-components](https://github.com/fails-components)
+
+* Go: [webtransport-go](https://github.com/quic-go/webtransport-go) by [@quic-go](https://github.com/quic-go)

@@ -11,8 +11,11 @@ Implemented a WebTransport client-server interation with webtransport-go library
 Test with a unidirectional stream from server to client.
 Test with a bidirectional stream.
 
-## v1.2 (Work In Progress)
+## v1.2
 
-Solving browser certificates issue.
-Solving go http3 server not serving static pages issue.
-Solving WebTransport nodejs server issue
+Solved browser certificates issue.
+Solved WebTransport nodejs server transportInt issue.
+Implemented server webtransport module and client WebTransport library.
+Added two version of client: browser client (browserclient.js) and process client (client.js)
+
+## v1.3 (Work In Progress)

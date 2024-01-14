@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://bundle.run/buffer@6.0.3"></script>
+    <script src="./lib/WebTransportLibrary.js"></script>
+    <title>Web Transport simple client</title>    
+</head>
+<body onload="load()">
+    <h1>Server says: <a id="server_response"></a></h1>
+    <div>
+      <textarea id="message_to_server"></textarea>  
+    </div>
+    <div>
+       <button onclick="sendToServer()">send to server</button>
+    </div>
+    <div>
+        <label>Connection status: </label><a id="connection_status"></a>
+        <div>
+            <button onclick="connect()">connect to server</button>
+            <button onclick="disconnect()">disconnect from server</button>
+        </div>
+    </div>
+    <div>
+        <label>Error box</label><br/><textarea id="error_box"></textarea>
+    </div>
+    <script src="./browserclient.js"></script>
+</body>
+</html>
