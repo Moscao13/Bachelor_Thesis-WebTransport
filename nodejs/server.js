@@ -1,5 +1,5 @@
 import { readFileSync } from "fs";
-import { Http3Server } from "@fails-components/webtransport/dist/main/test/fixtures/certificate.js"
+import { Http3Server } from "@fails-components/webtransport"
 import { generateWebTransportCertificate } from "./certificate.js"
 import { initConnection, closeConnection, writeOnOutgoingStream, openBidirectionalStream, receiveUnidirectionalStream, receiveBidirectionalStream, readData } from './lib/WebTransportModule.js'
 
