@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
-import { Http3Server } from "@fails-components/webtransport"
-import { generateWebTransportCertificate } from './certificate.js'
-import { initConnection, closeConnection, writeOnOutgoingStream, receiveFromIncomingUnidirectionalStream, receiveFromIncomingBidirectionalStream, openBidirectionalStream, receiveUnidirectionalStream, receiveBidirectionalStream, readData } from './lib/WebTransportModule.js'
+import { Http3Server } from "@fails-components/webtransport/dist/main/test/fixtures/certificate.js"
+import { generateWebTransportCertificate } from "./certificate.js"
+import { initConnection, closeConnection, writeOnOutgoingStream, openBidirectionalStream, receiveUnidirectionalStream, receiveBidirectionalStream, readData } from './lib/WebTransportModule.js'
 
 let certificate = readFileSync("./cert.pem").toString()
 let privateKey = readFileSync("./key.pem").toString()
@@ -32,7 +32,7 @@ try {
     privKey: privateKey,
   });
   h3Server.onServerListening = function(){
-    console.log(`Server listening at ${h3Server.host}:${h3Server.port}`)
+    console.log(`Server listening at ${h3Server.args.host}:${h3Server.args.port}`)
   }
 
   echo(h3Server)
@@ -42,10 +42,11 @@ try {
 }
 
 /**
- * 
+ * Endpoint for echo function (/echo)
  * @param {Http3Server} server 
  */
 async function echo(server){
+  let isActiveSession = false
   try {
     const sessionStream = await server.sessionStream('/echo')
     const sessionReader = sessionStream.getReader()
@@ -55,30 +56,31 @@ async function echo(server){
       if (done) {
         console.log('Server is gone')
       }
-      console.log('got a newsession')
+      console.log('New session')
       await value.ready
-      console.log('server session is ready')
-      const helpfunc = async () => {
+      console.log('Session is ready')
+
+      const waitForClosure = async (session) => {
         try {
-          const err = await value.closed
-          console.log('server session was closed', err)
+          await session.closed
+          isActiveSession = false
+          console.log("Session was successfully closed")
         } catch (error) {
-          console.log('server session close error:', error)
+          console.error(`An error occurred while closing session: ${error}`)
         }
       }
-      //helpfunc()
       
-      prova(value)
+      waitForClosure(value)
+      isActiveSession = true
 
-      while(f){
+      while(isActiveSession){
         const bi = await receiveBidirectionalStream(value.incomingBidirectionalStreams)
-        if(!f) break
+        if(!isActiveSession) break
         const res = new TextDecoder().decode(await readData(bi.receiveStream))
         writeOnOutgoingStream(bi.sendStream, res.toUpperCase())
         console.log(`result: ${res}`)
       }
-      console.log("stop")
-      //await value.closed
+      await value.closed
       //value.close()
     }
   } catch (error) {
@@ -86,10 +88,3 @@ async function echo(server){
   }
 }
 
-let f = true
-
-async function prova(x){
-  await x.closed
-  f = false
-
-}

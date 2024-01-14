@@ -74,48 +74,6 @@ async function writeOnOutgoingStream(outgoingStream, data) {
 }
 
 /**
- * Read data from a unidirectional incoming stream.
- * @param {ReadableStream<import("@fails-components/webtransport").WebTransportReceiveStream>} incomingStream The incoming unidirectional stream.
- * @returns {string | null} An object representing the received data.
- */
-async function receiveFromIncomingUnidirectionalStream(incomingStream) {
-    const reader = incomingStream.getReader()
-    try {
-        const { done, value } = await reader.read()
-        if(done){
-            return null
-        }
-        const data = await readData(value)
-        return new TextDecoder().decode(data)
-    } catch (error) {
-        console.error(`An error occurred while reading from incoming stream: ${error}`)
-        return null
-    }
-}
-
-
-/**
- * Read data from a bidirectional incoming stream.
- * @param {ReadableStream<import("@fails-components/webtransport").WebTransportBidirectionalStream>} incomingStream The incoming bidirectional stream.
- * @returns {string | null} An object representing the received data.
- */
-async function receiveFromIncomingBidirectionalStream(incomingStream) {
-    const reader = incomingStream.getReader()
-    try {
-        const { done, value } = await reader.read()
-        if(done){
-            return null
-        }
-        const data = await readData(value.readable)
-        return new TextDecoder().decode(data)
-    } catch (error) {
-        console.error(`An error occurred while reading from incoming stream: ${error}`)
-        return null
-    }
-    
-}
-
-/**
  * Open a bidirectional stream.
  * @param {import("@fails-components/webtransport").WebTransportSession} session 
  * @returns Receive and send streams
