@@ -10,7 +10,7 @@ The heart of the protocol is multiplexed connection made of sessions and streams
 
 WebTransport is very young. Its first draft was released on February 17th 2021. It is already a draft and It has not been standardized by IETF yet.
 
-## Credit
+## Credits
 
 Libraries:
 
