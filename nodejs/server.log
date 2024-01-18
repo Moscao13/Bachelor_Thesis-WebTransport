@@ -1,0 +1,16 @@
+------------------------------------------------
+Starting new server instance
+Thu Jan 18 2024 21:58:29 GMT+0100 (Central European Standard Time) INFO: Server listening at 0.0.0.0:8080
+Thu Jan 18 2024 21:58:41 GMT+0100 (Central European Standard Time) INFO: New session opened
+Thu Jan 18 2024 21:58:41 GMT+0100 (Central European Standard Time) INFO: Session is ready
+Thu Jan 18 2024 21:58:46 GMT+0100 (Central European Standard Time) INFO: result: ciao ciao
+Thu Jan 18 2024 21:58:46 GMT+0100 (Central European Standard Time) INFO: Data was successfully sent!
+Thu Jan 18 2024 21:58:49 GMT+0100 (Central European Standard Time) INFO: Session was successfully closed
+------------------------------------------------
+Starting new server instance
+Thu Jan 18 2024 21:59:08 GMT+0100 (Central European Standard Time) INFO: Server listening at 0.0.0.0:8080
+Thu Jan 18 2024 21:59:10 GMT+0100 (Central European Standard Time) INFO: New session opened
+Thu Jan 18 2024 21:59:10 GMT+0100 (Central European Standard Time) INFO: Session is ready
+Thu Jan 18 2024 21:59:13 GMT+0100 (Central European Standard Time) INFO: result: dskdk
+Thu Jan 18 2024 21:59:13 GMT+0100 (Central European Standard Time) INFO: Data was successfully sent!
+Thu Jan 18 2024 21:59:15 GMT+0100 (Central European Standard Time) INFO: Session was successfully closed

@@ -1,5 +1,5 @@
 import { WebTransport } from "@fails-components/webtransport"
-import { initConnection, closeConnection, writeOnOutgoingStream, receiveFromIncomingStream } from './lib/WebTransportModule.js'
+import { initConnection, closeConnection, writeOnOutgoingStream, receiveFromIncomingStream } from '../lib/WebTransportModule.js'
 
 async function runClient(args, hashes) {
     const url = 'https://' + args.hostname + ':' + args.port + '/echo'

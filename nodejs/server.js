@@ -1,7 +1,21 @@
-import { readFileSync } from "fs";
+import { readFileSync, createWriteStream } from "fs";
 import { Http3Server } from "@fails-components/webtransport"
 import { generateWebTransportCertificate } from "./certificate.js"
 import { initConnection, closeConnection, writeOnOutgoingStream, openBidirectionalStream, receiveUnidirectionalStream, receiveBidirectionalStream, readData } from './lib/WebTransportModule.js'
+
+// Log settings section
+const log_file = createWriteStream("./server.log", {flags: 'a'})
+log_file.write(`------------------------------------------------\nStarting new server instance\n`)
+
+console.log = function(value){
+  log_file.write(`${new Date()} INFO: ${value}\n`)
+}
+
+console.error = function(value){
+  log_file.write(`${new Date()} ERROR: ${value}\n`)
+}
+// End log settings section
+
 
 let certificate = readFileSync("./cert.pem").toString()
 let privateKey = readFileSync("./key.pem").toString()
@@ -56,7 +70,7 @@ async function echo(server){
       if (done) {
         console.log('Server is gone')
       }
-      console.log('New session')
+      console.log('New session opened')
       await value.ready
       console.log('Session is ready')
 
@@ -84,7 +98,7 @@ async function echo(server){
       //value.close()
     }
   } catch (error) {
-    console.log('An error occurred', error)
+    console.log(`An error occurred: ${error}`)
   }
 }
 

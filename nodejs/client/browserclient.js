@@ -1,8 +1,9 @@
   let transport;
 
-  const connectionStatusString = document.getElementById("connection_status")
-  const errorBox = document.getElementById("error_box")
-  const serverResponseBox = document.getElementById("server_response")
+  const messageToServer = document.getElementById("messageToServer")
+  const connectionStatusString = document.getElementById("connectionStatus")
+  const errorBox = document.getElementById("errors")
+  const serverResponseBox = document.getElementById("messageFromServer")
 
   function load(){
     connectionStatusString.innerHTML = 'Not connected'
@@ -48,7 +49,7 @@
       connectionStatusString.style.color = 'green'
     }).catch((err) => {
       console.error(`An error occurred while connecting to server: ${err}`)
-      errorBox.value = `An error occurred while connecting to server: ${err}`
+      errorBox.value += `An error occurred while connecting to server: ${err}\n`
     })
     
   }
@@ -57,27 +58,38 @@
     closeConnection(transport)
     connectionStatusString.innerHTML = 'Not connected'
     connectionStatusString.style.color = 'red'
+    clearMessage()
   }
 
 
   function sendToServer(){
-    if(connectionStatusString.innerHTML == 'Not connected'){
-      errorBox.value = 'Cannot send data because no connection were open'
-      return
-    }
-    const data = document.getElementById("message_to_server").value
+    const data = messageToServer.value
     if(data == null || data == ''){
-      errorBox.value = 'Message cannot be null'
+      errorBox.value += 'Message cannot be null'
       return
     }
+    
+    if(connectionStatusString.innerHTML == 'Not connected'){
+      errorBox.value += 'Cannot send data because no connection were open\n'
+      return
+    }   
     
     transport.createBidirectionalStream().then(async (value) => {
       await writeOnOutgoingStream(value.writable, data)
       const resp = new TextDecoder().decode(await readData(value.readable))
       console.log(resp)
-      serverResponseBox.innerHTML = resp
+      serverResponseBox.value = resp
+      clearMessage()
     }).catch((err) => {
       console.error(`An error occurred while writing data to server: ${err}`)
-      errorBox.value = `An error occurred while writing data to server: ${err}`
+      errorBox.value += `An error occurred while writing data to server: ${err}\n`
     })
+  }
+
+  function clearMessage(){
+    messageToServer.value = ''
+  }
+
+  function clearErrors(){
+    errorBox.value = ''
   }
