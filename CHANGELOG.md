@@ -18,4 +18,7 @@ Solved WebTransport nodejs server transportInt issue.
 Implemented server webtransport module and client WebTransport library.
 Added two version of client: browser client (browserclient.js) and process client (client.js)
 
-## v1.3 (Work In Progress)
+## v1.3
+
+Created branch test
+Created test environment
