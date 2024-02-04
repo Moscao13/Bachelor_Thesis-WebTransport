@@ -14,6 +14,9 @@ WebTransport is very young. Its first draft was released on February 17th 2021. 
 
 Libraries:
 
-* NodeJs: [webtransport](https://github.com/fails-components/webtransport) by [@fails-components](https://github.com/fails-components)
+- NodeJs:
+  - [webtransport](https://github.com/fails-components/webtransport) by [@fails-components](https://github.com/fails-components)
 
-* Go: [webtransport-go](https://github.com/quic-go/webtransport-go) by [@quic-go](https://github.com/quic-go)
+- Go:
+  - [webtransport-go](https://github.com/quic-go/webtransport-go) by [@quic-go](https://github.com/quic-go)
+  - [websockets](https://github.com/gorilla/websocket) by [@gorilla](https://github.com/gorilla)
