@@ -1,6 +1,5 @@
 import { readFileSync, createWriteStream } from "fs";
 import { Http3Server } from "@fails-components/webtransport"
-import { generateWebTransportCertificate } from "../../certificate.js"
 import { initConnection, closeConnection, writeOnOutgoingStream, openBidirectionalStream, readData } from '../../lib/WebTransportModule.js'
 
 async function receiveBidirectionalStream(bidirectionalIncomingStream){
