@@ -1,7 +1,5 @@
 package main
 
-// TODO: certificates stuff. Server has cert.pem and key.pem. Client want a certificate but idk which one
-
 import (
 	"context"
 	"crypto/tls"

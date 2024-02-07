@@ -1,2 +1,4 @@
 *.pem
 *.log
+nodejs/certificate.js
+nodejs/node_modules

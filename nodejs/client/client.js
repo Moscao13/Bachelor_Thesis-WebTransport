@@ -38,8 +38,7 @@ async function runClient(args, hashes) {
       serverCertificateHashes: [
         {
           algorithm: 'sha-256',
-          value:
-            '37:64:64:E0:23:BB:67:57:EB:61:79:F6:47:02:4D:E9:D0:A9:D7:04:F5:72:AE:27:16:28:79:7F:01:3D:58:6F'
+          value: ''//Insert here certificate fingerprint
         }
       ]
     }

@@ -1,7 +1,6 @@
 import { readFileSync, createWriteStream } from "fs";
 import { Http3Server } from "@fails-components/webtransport"
-import { generateWebTransportCertificate } from "./certificate.js"
-import { initConnection, closeConnection, writeOnOutgoingStream, openBidirectionalStream, receiveUnidirectionalStream, receiveBidirectionalStream, readData } from './lib/WebTransportModule.js'
+import { initConnection, closeConnection, writeOnOutgoingStream, openBidirectionalStream, receiveUnidirectionalStream, receiveBidirectionalStream, readData } from '../../lib/WebTransportModule.js'
 
 // Log settings section
 const log_file = createWriteStream("./server.log", {flags: 'a'})
@@ -16,26 +15,8 @@ console.error = function(value){
 }
 // End log settings section
 
-
 let certificate = readFileSync("./cert.pem").toString()
 let privateKey = readFileSync("./key.pem").toString()
-//let certificate
-if (!certificate) {
-  const attrs = [
-    { shortName: 'C', value: 'DE' },
-    { shortName: 'ST', value: 'Berlin' },
-    { shortName: 'L', value: 'Berlin' },
-    { shortName: 'O', value: 'webtransport Test Server' },
-    { shortName: 'CN', value: '127.0.0.1' }
-  ]
-  certificate = await generateWebTransportCertificate(attrs, {
-    days: 13
-  })
-}
-
- //console.log('certificate hash ', certificate.fingerprint)
- //console.log('certificate cert ', certificate.cert)
- //console.log('certificate key ', certificate.private)
 
 try {
   const h3Server = new Http3Server({

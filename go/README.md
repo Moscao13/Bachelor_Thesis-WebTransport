@@ -1,9 +1,7 @@
 # Go WebTransport test
 
-In order to use this client-server implementation It is necessary to generate a self signed certificate file and a key file for tls handshake interation.
-After the generation copy and paste the two file generated (cert.pem and key.pem) on the server folder; then copy and paste certificate fle (cert.pem) in client folder too.
-
-It is possible to generate certificate and key with the openssl command:
+In order to try this client-server implementation You have to generate a self signed certificate file and a private key file for tls handshake interation.
+The openssl command below generates the two files cert.pem and key.pem
 
     openssl req -new -x509 -nodes \
     -out cert.pem \
@@ -12,3 +10,7 @@ It is possible to generate certificate and key with the openssl command:
     -pkeyopt ec_paramgen_curve:prime256v1 \
     -subj '/CN=127.0.0.1' \
     -days 14
+
+Both files has to be placed in the same folder of the server.go file. Only certificate file has to be placed also in the same folder of the client.go file.
+
+"-days 14" flag indicates that generated certificate, with the relative private key, will expires in 14 days. So remember to generate another certificate after the expiration.
