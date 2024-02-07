@@ -1,0 +1,143 @@
+html, h1{
+    margin: 0;
+}
+
+body{
+    background-color: rgba(0, 255, 255, 0.266);
+    margin: 0;
+}
+
+nav{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: white;
+    margin: 0;
+    margin-bottom: 30px;
+    padding: 0.8em;
+    align-items: center;
+    box-shadow: 0px 1px 10px 1px gray;
+}
+
+label{
+    font-weight: 700;
+    font-size: 20px;
+}
+
+button{
+    border-radius: 10px;
+    width: 150px;
+    height: 40px;
+    background-color: white;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+button:hover{
+    cursor: pointer;
+}
+
+button:active{
+    transform: scale(0.98);
+}
+
+textarea{
+    height: 80px;
+    width: 80%;
+    border-radius: 20px;
+    resize: none;
+    padding: 10px;
+    background-color: white;
+    margin-top: 5px;
+}
+
+hr{
+    width: 97%;
+}
+
+.app{
+    margin: 15px;
+}
+
+.communicationBox{
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.connectionStatusBox{
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.errorBox{
+    text-align: center;
+}
+
+#chart{
+    border: 2px solid black;
+    border-radius: 2em;
+    padding: 1.5em;
+    width: 50%;
+    background-color: white;
+}
+
+b{
+    color: blue;
+}
+
+.cardContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.statsButton{
+    width: 5em;
+    border: 2px solid black;
+    border-radius: 2em;
+    background-color: white;
+    font-weight: 700;
+}
+
+#statsApp{
+    padding-right: 2em;
+    padding-left: 2em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#values{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.card{
+    background-color: white;
+    height: 4em;
+    width: 32em;
+    border: 2px solid black;
+    border-radius: 20px;
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 700;
+}
+
+#description{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+#desc{
+    width: 100%;
+}

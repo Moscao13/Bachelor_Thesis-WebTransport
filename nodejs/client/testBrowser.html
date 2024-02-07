@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://bundle.run/buffer@6.0.3"></script>
+    <script src="../lib/apexcharts-bundle/dist/apexcharts.min.js"></script>
+    <script src="../lib/apexcharts-bundle/dist/apexcharts.js"></script>
+    
+    <script src="../lib/WebTransportLibrary.js"></script>
+
+    <link rel="stylesheet" href="../lib/apexcharts-bundle/dist/apexcharts.css">
+    
+    <link rel="stylesheet" href="./testBrowser.css">
+
+    <title>WebTransport</title>
+</head>
+<body onload="load()">
+    <nav>
+        <button id='1' class="goto" onclick="changePage(id)">Go to WebSocket</button>
+        <h1>WebTransport & WebSockets browser client</h1>
+        <button id="2" class="goto" onclick="changePage(id)">Go to Stats</button>
+    </nav>
+    <div id="WebTransport" class="block">    
+        <div class="app">
+            <div class="connectionStatusBox">
+                <label>Connection status: <a id="WTConnectionStatus"></a></label>
+                <div>
+                    <button onclick="WTConnect()">connect to server</button>
+                    <button onclick="WTDisconnect()">disconnect from server</button>
+                </div>
+            </div>
+        
+            <div class="communicationBox">
+                <label>Message to server</label><br/>
+                <textarea id="WTMessageToServer"></textarea><br/>
+                <button onclick="WTSendToServer()">send to server</button> 
+                <button onclick="WTClearMessage()">clear message</button> 
+            </div>
+        
+            <div class="communicationBox">
+                <label>Message from server</label><br/>
+                <textarea id="WTMessageFromServer" disabled></textarea><br/>
+            </div>
+        
+            <hr>
+            <div class="errorBox">
+                <label>Error box</label><br/><textarea id="WTErrors" disabled></textarea><br>
+                <button onclick="WTClearErrors()">clear error box</button>
+            </div>
+        </div>
+        
+    </div>
+
+    <div id="WebSocket" class="block">
+        <div class="app">
+            <div class="connectionStatusBox">
+                <label>Connection status: <a id="WSConnectionStatus"></a></label>
+                <div>
+                    <button onclick="WSConnect()">open websocket</button>
+                    <button onclick="WSDisconnect()">close websocket</button>
+                </div>
+            </div>
+        
+            <div class="communicationBox">
+                <label>Message to server</label><br/>
+                <textarea id="WSMessageToServer"></textarea><br/>
+                <button onclick="WSSendToServer()">send to server</button> 
+                <button onclick="WSClearMessage()">clear message</button> 
+            </div>
+        
+            <div class="communicationBox">
+                <label>Message from server</label><br/>
+                <textarea id="WSMessageFromServer" disabled></textarea><br/>
+            </div>
+        
+            <hr>
+            <div class="errorBox">
+                <label>Error box</label><br/><textarea id="WSErrors" disabled></textarea><br>
+                <button onclick="WSClearErrors()">clear error box</button>
+            </div>
+        </div>
+        
+    </div>
+
+    <div id="stats" class="block">
+        <div id="statsApp">
+            <div class="buttons">
+              <button class="statsButton" onclick="StatsErase()">Erase</button>
+              <button class="statsButton" onclick="StatsRefresh()">Refresh</button>
+            </div>
+            <div id="values">
+              <div id="chart"></div>
+              <div class="cardContainer">
+                <div class="card"><div>WebTransport max latency: <b id="maxWTLatency"></b></div><br/><div>WebSockets max latency: <b id="maxWSLatency"></b></div></div>
+                <div class="card"><div>WebTransport min latency: <b id="minWTLatency"></b></div><br/><div>WebSockets min latency: <b id="minWSLatency"></b></div></div>
+                <div class="card"><div>Average percentage gap: <b id="avgPercLatencyDiff"></b></div><br/><div>Percentage max gap: <b id="maxPercLatencyDiff"></b></div></div>
+              </div>
+            </div>
+            <div id="description"><div class="card" id="desc">Comparison between the two protocols are made taking WebTransport protocol as the point of reference. So a negative Average percentage gap value indicates a higher value of average latency for WebTransport communications than WebSocket's and a positive value indicates a lower latency for WebTransport communications than WebSocket's. To add data to chart go to WebTransport and WebSoket pages and send some request. But first remember to start up servers.</div></div>
+          </div>
+             
+    </div>
+
+    <script src="./testBrowser.js"></script> 
+    
+</body>
+</html>

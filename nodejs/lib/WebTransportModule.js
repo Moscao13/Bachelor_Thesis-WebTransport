@@ -3,15 +3,16 @@
  * @author Moscao13 <mattia.mosconi2002@gmail.com>
  */
 
-import { Http3Server } from "@fails-components/webtransport"
+import { Http3Server, WebTransport } from "@fails-components/webtransport"
 
 /**
  * Initialize the WebTransport connection.
  * @param   {String}            url The url of the endpoint you want to connect.
+ * @param   {Object}            hashagrs The hashed secure certificate
  * @return  {WebTransport | null}      An instance of the WebTransport connection.
  */
-export function initConnection(url){
-    const transport = new WebTransport(url)
+export function initConnection(url, hashagrs){
+    const transport = new WebTransport(url, hashagrs)
     transport.ready.then(() => {
         console.log("WebTransport connection ready!")
     }).catch((err) => {
