@@ -50,8 +50,7 @@ export async function multiStreamSingleClientWebTransport(){
       serverCertificateHashes: [
         {
           algorithm: 'sha-256',
-          value:
-            'CF:2A:BC:22:7C:97:B2:96:78:34:59:2E:42:1C:FB:87:BB:9E:22:DB:DF:A7:4B:C2:B4:71:88:0D:B6:8E:63:8B'
+          value: ''//Insert here certificate fingerprint
         }
       ]
     }
