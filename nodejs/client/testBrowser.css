@@ -74,11 +74,19 @@ hr{
     text-align: center;
 }
 
-#chart{
+.charts{
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.chart{
     border: 2px solid black;
     border-radius: 2em;
     padding: 1.5em;
-    width: 50%;
+    width: 40%;
     background-color: white;
 }
 
@@ -88,8 +96,9 @@ b{
 
 .cardContainer{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-around;
+    margin-bottom: 1em;
 }
 
 .statsButton{
@@ -111,7 +120,7 @@ b{
 #values{
     display: flex;
     justify-content: space-between;
-    flex-direction: row;
+    flex-direction: column;
     margin-top: 1em;
     margin-bottom: 1em;
 }
@@ -119,7 +128,7 @@ b{
 .card{
     background-color: white;
     height: 4em;
-    width: 32em;
+    width: 20em;
     border: 2px solid black;
     border-radius: 20px;
     padding: 20px;
@@ -130,14 +139,4 @@ b{
     justify-content: center;
 
     font-weight: 700;
-}
-
-#description{
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
-
-#desc{
-    width: 100%;
 }

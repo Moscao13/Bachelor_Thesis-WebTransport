@@ -94,14 +94,21 @@
               <button class="statsButton" onclick="StatsRefresh()">Refresh</button>
             </div>
             <div id="values">
-              <div id="chart"></div>
+              <div class="charts">
+                <div class="chart" id="latencyChart"></div>
+                <div class="chart" id="throughputChart"></div>
+              </div>
               <div class="cardContainer">
                 <div class="card"><div>WebTransport max latency: <b id="maxWTLatency"></b></div><br/><div>WebSockets max latency: <b id="maxWSLatency"></b></div></div>
                 <div class="card"><div>WebTransport min latency: <b id="minWTLatency"></b></div><br/><div>WebSockets min latency: <b id="minWSLatency"></b></div></div>
                 <div class="card"><div>Average percentage gap: <b id="avgPercLatencyDiff"></b></div><br/><div>Percentage max gap: <b id="maxPercLatencyDiff"></b></div></div>
               </div>
+              <div class="cardContainer">
+                <div class="card"><div>WebTransport max Throughput: <b id="maxWTThroughput"></b></div><br/><div>WebSockets max Throughput: <b id="maxWSThroughput"></b></div></div>
+                <div class="card"><div>WebTransport min Throughput: <b id="minWTThroughput"></b></div><br/><div>WebSockets min Throughput: <b id="minWSThroughput"></b></div></div>
+                <div class="card"><div>Average percentage gap: <b id="avgPercThroughputDiff"></b></div><br/><div>Percentage max gap: <b id="maxPercThroughputDiff"></b></div></div>
+              </div>
             </div>
-            <div id="description"><div class="card" id="desc">Comparison between the two protocols are made taking WebTransport protocol as the point of reference. So a negative Average percentage gap value indicates a higher value of average latency for WebTransport communications than WebSocket's and a positive value indicates a lower latency for WebTransport communications than WebSocket's. To add data to chart go to WebTransport and WebSoket pages and send some request. But first remember to start up servers.</div></div>
           </div>
              
     </div>

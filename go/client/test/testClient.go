@@ -59,7 +59,8 @@ func TestSingleStreamSingleClient(context context.Context, d *webtransport.Diale
 		return
 	}
 
-	result := ""
+	latencyResult := ""
+	throughputResult := ""
 	reader := bufio.NewReader(bistream)
 
 	loremIpsum, errLoremIpsum := getLoremIpsum()
@@ -72,6 +73,7 @@ func TestSingleStreamSingleClient(context context.Context, d *webtransport.Diale
 		before := time.Now()
 
 		/// Writing request message to webtransport server
+		dataSize := len(loremIpsum)
 		_, wrErr := bistream.Write(loremIpsum)
 		if wrErr != nil {
 			log.Printf("An error occurred while writing on stream: %s", wrErr.Error())
@@ -86,20 +88,23 @@ func TestSingleStreamSingleClient(context context.Context, d *webtransport.Diale
 			return
 		}
 
-		result += fmt.Sprintf("Latency: %d\n", after.Sub(before).Microseconds())
+		latencyResult += fmt.Sprintf("Latency: %d\n", after.Sub(before).Microseconds())
+		throughputResult += fmt.Sprintf("Throughput: %f\n", float64(dataSize)/float64(after.Sub(before).Microseconds()))
 	}
 
 	/// Closing stream with the webtransport server
 	bistream.Close()
 	/// Writing result into log file
-	writeResult(result, "webtransport.singlestream.results.log")
+	writeResult(latencyResult, "webtransport.singlestream.latency.results.log")
+	writeResult(throughputResult, "webtransport.singlestream.throughput.results.log")
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------*/
 
 func multiStreamThread(stream webtransport.Stream, reader bufio.Reader, index int, wg *sync.WaitGroup, l *sync.Mutex) {
 	defer wg.Done()
-	result := ""
+	latencyResult := ""
+	throughputResult := ""
 	loremIpsum, errLoremIpsum := getLoremIpsum()
 	if errLoremIpsum != nil {
 		log.Printf("An error occurred while preparing request: %s", errLoremIpsum)
@@ -109,6 +114,7 @@ func multiStreamThread(stream webtransport.Stream, reader bufio.Reader, index in
 		before := time.Now()
 
 		/// Writing request message to webtransport server
+		dataSize := len(loremIpsum)
 		_, wrErr := stream.Write(loremIpsum)
 
 		if wrErr != nil {
@@ -124,14 +130,16 @@ func multiStreamThread(stream webtransport.Stream, reader bufio.Reader, index in
 			return
 		}
 
-		result += fmt.Sprintf("Latency: %d\n", after.Sub(before).Microseconds())
+		latencyResult += fmt.Sprintf("Latency: %d\n", after.Sub(before).Microseconds())
+		throughputResult += fmt.Sprintf("Throughput: %f\n", float64(dataSize)/float64(after.Sub(before).Microseconds()))
 	}
 	/// Closing stream with the webtransport server
 	stream.Close()
 
 	l.Lock()
 	/// Writing result into log file
-	writeResult(result, "webtransport.multistream.results.log")
+	writeResult(latencyResult, "webtransport.multistream.latency.results.log")
+	writeResult(throughputResult, "webtransport.multistream.throughput.results.log")
 	l.Unlock()
 }
 
@@ -185,7 +193,8 @@ func TestSingleStreamSingleClientWebSocket(d *websocket.Dialer) {
 		return
 	}
 
-	result := ""
+	latencyResult := ""
+	throughputResult := ""
 
 	loremIpsum, errLoremIpsum := getLoremIpsum()
 
@@ -196,6 +205,7 @@ func TestSingleStreamSingleClientWebSocket(d *websocket.Dialer) {
 	for i := 0; i < streamQty; i++ {
 		before := time.Now()
 		/// Writing request message to websocket server
+		dataSize := len(loremIpsum)
 		wrErr := conn.WriteMessage(websocket.TextMessage, loremIpsum)
 		if wrErr != nil {
 			log.Println("An error occurred while writing on the websocket")
@@ -211,12 +221,14 @@ func TestSingleStreamSingleClientWebSocket(d *websocket.Dialer) {
 			return
 		}
 
-		result += fmt.Sprintf("Latency: %d\n", after.Sub(before).Microseconds())
+		latencyResult += fmt.Sprintf("Latency: %d\n", after.Sub(before).Microseconds())
+		throughputResult += fmt.Sprintf("Throughput: %f\n", float64(dataSize)/float64(after.Sub(before).Microseconds()))
 	}
 	/// Closing connection with the websocket server
 	conn.Close()
 	/// Writing result into log file
-	writeResult(result, "websockets.singlestream.results.log")
+	writeResult(latencyResult, "websockets.singlestream.latency.results.log")
+	writeResult(throughputResult, "websockets.singlestream.throughput.results.log")
 }
 
 /*---------------------------------------------------------------------------------------------------*/
@@ -232,7 +244,8 @@ func multiSocketThread(d *websocket.Dialer, wg *sync.WaitGroup, l *sync.Mutex) {
 		return
 	}
 
-	result := ""
+	latencyResult := ""
+	throughputResult := ""
 	loremIpsum, errLoremIpsum := getLoremIpsum()
 
 	if errLoremIpsum != nil {
@@ -242,6 +255,7 @@ func multiSocketThread(d *websocket.Dialer, wg *sync.WaitGroup, l *sync.Mutex) {
 	for i := 0; i < streamQty; i++ {
 		before := time.Now()
 		/// Writing request message to websocket server
+		dataSize := len(loremIpsum)
 		wrErr := conn.WriteMessage(websocket.TextMessage, loremIpsum)
 		if wrErr != nil {
 			log.Printf("An error occurred while opening websocket: %s", err.Error())
@@ -256,14 +270,16 @@ func multiSocketThread(d *websocket.Dialer, wg *sync.WaitGroup, l *sync.Mutex) {
 			return
 		}
 
-		result += fmt.Sprintf("Latency: %d\n", after.Sub(before).Microseconds())
+		latencyResult += fmt.Sprintf("Latency: %d\n", after.Sub(before).Microseconds())
+		throughputResult += fmt.Sprintf("Throughput: %f\n", float64(dataSize)/float64(after.Sub(before).Microseconds()))
 	}
 
 	/// Closing connection with the websocket server
 	conn.Close()
 	l.Lock()
 	/// Writing result into log file
-	writeResult(result, "websocket.multistream.results.log")
+	writeResult(latencyResult, "websockets.multistream.latency.results.log")
+	writeResult(throughputResult, "websockets.multistream.throughput.results.log")
 	l.Unlock()
 }
 

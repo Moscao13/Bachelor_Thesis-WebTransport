@@ -1,16 +1,22 @@
 let ws = null
 let WSBefore = null
 let WSAfter = null
+let WSDataSize = null
 
 let transport;
 let WTBefore = null
 let WTAfter = null
+let WTDataSize = null
 
-let WSData = []
-let WTData = []
+let WSLatencyData = []
+let WTLatencyData = []
+
+let WSThroughputData = []
+let WTThroughputData = []
 
 let size
-var chart
+var latencyChart
+var throughputChart
 
 const WSMessageToServer = document.getElementById("WSMessageToServer")
 const WSConnectionStatusString = document.getElementById("WSConnectionStatus")
@@ -44,7 +50,8 @@ function WSConnect(){
         WSServerResponseBox.value = ev.data
         WSAfter = new Date().getTime()
         console.log(`Latency: ${WSAfter-WSBefore} ms`)
-        WSData.push(WSAfter-WSBefore)
+        WSLatencyData.push((WSAfter-WSBefore).toFixed(2))
+        WSThroughputData.push((WSDataSize/(WSAfter-WSBefore)).toFixed(2))
         WSClearMessage()
     }
 
@@ -76,6 +83,7 @@ function WSSendToServer(){
       return
     }
 
+    WSDataSize = data.length
     WSBefore = new Date().getTime()
     ws.send(data)
     
@@ -156,12 +164,14 @@ function WTSendToServer(){
   }   
   
   transport.createBidirectionalStream().then(async (value) => {
+    WTDataSize = data.length
     WTBefore = new Date().getTime()
     await writeOnOutgoingStream(value.writable, data)
     const resp = new TextDecoder().decode(await readData(value.readable))
     WTAfter = new Date().getTime()
     console.log(`Latency: ${WTAfter-WTBefore} ms`)
-    WTData.push(WTAfter-WTBefore)
+    WTLatencyData.push((WTAfter-WTBefore).toFixed(2))
+    WTThroughputData.push((WTDataSize/(WTAfter-WTBefore)).toFixed(2))
     console.log(resp)
     WTServerResponseBox.value = resp
     WTClearMessage()
@@ -180,19 +190,35 @@ function WTClearErrors(){
 }
 
 function StatsCompute(){
-    const maxWSLatency = size <= 0 ? 0 : Math.max(...WSData).toFixed(2)
-    const maxWTLatency = size <= 0 ? 0 : Math.max(...WTData).toFixed(2)
-    const minWSLatency = size <= 0 ? 0 : Math.min(...WSData).toFixed(2)
-    const minWTLatency = size <= 0 ? 0 : Math.min(...WTData).toFixed(2)
+    const maxWSLatency = size <= 0 ? 0 : Math.max(...WSLatencyData).toFixed(2)
+    const maxWTLatency = size <= 0 ? 0 : Math.max(...WTLatencyData).toFixed(2)
+    const minWSLatency = size <= 0 ? 0 : Math.min(...WSLatencyData).toFixed(2)
+    const minWTLatency = size <= 0 ? 0 : Math.min(...WTLatencyData).toFixed(2)
+
+    const maxWSThroughput = size <= 0 ? 0 : Math.max(...WSThroughputData).toFixed(2)
+    const maxWTThroughput = size <= 0 ? 0 : Math.max(...WTThroughputData).toFixed(2)
+    const minWSThroughput = size <= 0 ? 0 : Math.min(...WSThroughputData).toFixed(2)
+    const minWTThroughput = size <= 0 ? 0 : Math.min(...WTThroughputData).toFixed(2)
 
     let sumPerc = 0
     let maxPercDiff = 0
     for(var i = 0; i < size; i++){
-        sumPerc += (WSData[i] - WTData[i])/WTData[i]
-        if(WSData[i] - WTData[i] > maxPercDiff) maxPercDiff = WSData[i] - WTData[i]
+        sumPerc += (WSLatencyData[i] - WTLatencyData[i])/WTLatencyData[i]
+        if(WSLatencyData[i] - WTLatencyData[i] > maxPercDiff) maxPercDiff = WSLatencyData[i] - WTLatencyData[i]
     }
 
     const avgPercentageLatencyDiff = size <= 0 ? 0 : (sumPerc/size).toFixed(2)
+
+    sumPerc = 0
+    maxPercDiff = 0
+    for(var i = 0; i < size; i++){
+        sumPerc += (WSThroughputData[i] - WTThroughputData[i])/WTThroughputData[i]
+        if(WSThroughputData[i] - WTThroughputData[i] > maxPercDiff) maxPercDiff = WSThroughputData[i] - WTThroughputData[i]
+    }
+
+    const avgPercentageThroughputDiff = size <= 0 ? 0 : (sumPerc/size).toFixed(2)
+
+    
 
     document.querySelector('#maxWSLatency').innerHTML = maxWSLatency + ' ms'
     document.querySelector('#maxWTLatency').innerHTML = maxWTLatency + ' ms'
@@ -200,19 +226,26 @@ function StatsCompute(){
     document.querySelector('#minWTLatency').innerHTML = minWTLatency + ' ms'
     document.querySelector('#avgPercLatencyDiff').innerHTML = avgPercentageLatencyDiff + ' %'
     document.querySelector('#maxPercLatencyDiff').innerHTML = maxPercDiff + ' %'
+
+    document.querySelector('#maxWSThroughput').innerHTML = maxWSThroughput + ' b/ms'
+    document.querySelector('#maxWTThroughput').innerHTML = maxWTThroughput + ' b/ms'
+    document.querySelector('#minWSThroughput').innerHTML = minWSThroughput + ' b/ms'
+    document.querySelector('#minWTThroughput').innerHTML = minWTThroughput + ' b/ms'
+    document.querySelector('#avgPercThroughputDiff').innerHTML = avgPercentageThroughputDiff + ' %'
+    document.querySelector('#maxPercThroughputDiff').innerHTML = maxPercDiff + ' %'
 }
 
 
 function StatsErase(){
-    WSData = []
-    WTData = []
+    WSLatencyData = []
+    WTLatencyData = []
     chart.updateSeries(
         [
             {
-                data: WTData
+                data: WTLatencyData
             },
             {
-                data: WSData
+                data: WSLatencyData
             }
         ]
     )
@@ -225,15 +258,15 @@ function StatsRefresh(){
   chart.updateSeries(
     [
         {
-            data: WTData
+            data: WTLatencyData
         },
         {
-            data: WSData
+            data: WSLatencyData
         }
     ]
   )
 
-  size = Math.max(WTData.length, WSData.length)
+  size = Math.max(WTLatencyData.length, WSLatencyData.length)
   StatsCompute()
 }
 
@@ -247,20 +280,20 @@ function load(){
   WSConnectionStatusString.style.color = 'red'
 
   const range = []
-  size = Math.max(WTData.length, WSData.length)
+  size = Math.max(WTLatencyData.length, WSLatencyData.length)
 
   for(var i = 1; i <= size; i++){
       range.push(i.toString())
   }
 
-  var options = {
+  var latencyOptions = {
           series: [{
           name: 'WebTransport',
-          data: WTData
+          data: WTLatencyData
       },
       {
           name: 'WebSockets',
-          data: WSData
+          data: WSLatencyData
       }
     ],
       chart: {
@@ -312,8 +345,70 @@ function load(){
     }
   };
 
-  chart = new ApexCharts(document.querySelector("#chart"), options);
-  chart.render();
+  var throughputOptions = {
+          series: [{
+          name: 'WebTransport',
+          data: WTThroughputData
+      },
+      {
+          name: 'WebSockets',
+          data: WSThroughputData
+      }
+      ],
+      chart: {
+      type: 'area',
+      stacked: false,
+      height: 350,
+      zoom: {
+        type: 'x',
+        enabled: true,
+        autoScaleYaxis: true
+      },
+      toolbar: {
+        autoSelected: 'zoom'
+      }
+      },
+      dataLabels: {
+      enabled: false
+      },
+      markers: {
+      size: 0,
+      },
+      title: {
+      text: 'Throughput',
+      align: 'left'
+      },
+      fill: {
+      type: 'gradient',
+      gradient: {
+        shadeIntensity: 1,
+        inverseColors: false,
+        opacityFrom: 0.5,
+        opacityTo: 0,
+        stops: [0, 90, 100]
+      },
+      },
+      yaxis: {
+      title: {
+        text: 'Throughput (b/ms)'
+      },
+      },
+      xaxis: {
+      title: {
+          text: 'Batch number'
+      },
+      categories: range
+      },
+      tooltip: {
+      shared: false,
+      }
+};
+
+  latencyChart = new ApexCharts(document.querySelector("#latencyChart"), latencyOptions);
+  throughputChart = new ApexCharts(document.querySelector("#throughputChart"), throughputOptions);
+
+  latencyChart.render();
+  throughputChart.render()
   StatsCompute()
 }
 
@@ -325,7 +420,7 @@ function changePage(v){
   for(var i = 0; i < blocks.length; i++){
     if(i == v) {
       blocks[i].style.display = 'block'
-      size = Math.max(WTData.length, WSData.length)
+      size = Math.max(WTLatencyData.length, WSLatencyData.length)
       StatsCompute()
     }
     else{
