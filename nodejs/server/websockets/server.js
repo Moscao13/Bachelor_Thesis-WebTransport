@@ -19,8 +19,8 @@ const wsServer = new WebSocketServer({ server: server })
 
 wsServer.on("connection", (connection) => {
     connection.on("message", (data, isBinary) => {
-        console.log("received: " + data)
         connection.send(data.toString())
+        console.log("Data was successfully sent!")
     })
 
     connection.on("close", (code, desc) => {

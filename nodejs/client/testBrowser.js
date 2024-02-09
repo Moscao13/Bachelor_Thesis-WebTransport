@@ -49,8 +49,8 @@ function WSConnect(){
     ws.onmessage = (ev) => {
         WSServerResponseBox.value = ev.data
         WSAfter = new Date().getTime()
-        console.log(`Latency: ${WSAfter-WSBefore} ms`)
-        WSLatencyData.push((WSAfter-WSBefore).toFixed(2))
+        console.log(`Latency: ${WSAfter.toFixed(2)-WSBefore.toFixed(2)} ms`)
+        WSLatencyData.push((WSAfter.toFixed(2)-WSBefore.toFixed(2)))
         WSThroughputData.push((WSDataSize/(WSAfter-WSBefore)).toFixed(2))
         WSClearMessage()
     }
@@ -169,8 +169,8 @@ function WTSendToServer(){
     await writeOnOutgoingStream(value.writable, data)
     const resp = new TextDecoder().decode(await readData(value.readable))
     WTAfter = new Date().getTime()
-    console.log(`Latency: ${WTAfter-WTBefore} ms`)
-    WTLatencyData.push((WTAfter-WTBefore).toFixed(2))
+    console.log(`Latency: ${WTAfter.toFixed(2)-WTBefore.toFixed(2)} ms`)
+    WTLatencyData.push((WTAfter.toFixed(2)-WTBefore.toFixed(2)))
     WTThroughputData.push((WTDataSize/(WTAfter-WTBefore)).toFixed(2))
     console.log(resp)
     WTServerResponseBox.value = resp
@@ -203,19 +203,21 @@ function StatsCompute(){
     let sumPerc = 0
     let maxPercDiff = 0
     for(var i = 0; i < size; i++){
-        sumPerc += (WSLatencyData[i] - WTLatencyData[i])/WTLatencyData[i]
-        if(WSLatencyData[i] - WTLatencyData[i] > maxPercDiff) maxPercDiff = WSLatencyData[i] - WTLatencyData[i]
+        sumPerc += (Math.abs(WSLatencyData[i] - WTLatencyData[i]))/WTLatencyData[i]
+        if(Math.abs(WSLatencyData[i] - WTLatencyData[i]) > maxPercDiff) maxPercDiff = Math.abs(WSLatencyData[i] - WTLatencyData[i])
     }
 
+    const maxPercentageLatencyDiff = maxPercDiff.toFixed(2)
     const avgPercentageLatencyDiff = size <= 0 ? 0 : (sumPerc/size).toFixed(2)
 
     sumPerc = 0
     maxPercDiff = 0
     for(var i = 0; i < size; i++){
-        sumPerc += (WSThroughputData[i] - WTThroughputData[i])/WTThroughputData[i]
-        if(WSThroughputData[i] - WTThroughputData[i] > maxPercDiff) maxPercDiff = WSThroughputData[i] - WTThroughputData[i]
+        sumPerc += (Math.abs(WSThroughputData[i] - WTThroughputData[i]))/WTThroughputData[i]
+        if(Math.abs(WSThroughputData[i] - WTThroughputData[i]) > maxPercDiff) maxPercDiff = Math.abs(WSThroughputData[i] - WTThroughputData[i])
     }
 
+    const maxPercentageThroughputDiff = maxPercDiff.toFixed(2)
     const avgPercentageThroughputDiff = size <= 0 ? 0 : (sumPerc/size).toFixed(2)
 
     
@@ -225,21 +227,23 @@ function StatsCompute(){
     document.querySelector('#minWSLatency').innerHTML = minWSLatency + ' ms'
     document.querySelector('#minWTLatency').innerHTML = minWTLatency + ' ms'
     document.querySelector('#avgPercLatencyDiff').innerHTML = avgPercentageLatencyDiff + ' %'
-    document.querySelector('#maxPercLatencyDiff').innerHTML = maxPercDiff + ' %'
+    document.querySelector('#maxPercLatencyDiff').innerHTML = maxPercentageLatencyDiff + ' ms'
 
     document.querySelector('#maxWSThroughput').innerHTML = maxWSThroughput + ' b/ms'
     document.querySelector('#maxWTThroughput').innerHTML = maxWTThroughput + ' b/ms'
     document.querySelector('#minWSThroughput').innerHTML = minWSThroughput + ' b/ms'
     document.querySelector('#minWTThroughput').innerHTML = minWTThroughput + ' b/ms'
     document.querySelector('#avgPercThroughputDiff').innerHTML = avgPercentageThroughputDiff + ' %'
-    document.querySelector('#maxPercThroughputDiff').innerHTML = maxPercDiff + ' %'
+    document.querySelector('#maxPercThroughputDiff').innerHTML = maxPercentageThroughputDiff + ' b/ms'
 }
 
 
 function StatsErase(){
     WSLatencyData = []
     WTLatencyData = []
-    chart.updateSeries(
+    WSThroughputData = []
+    WTThroughputData = []
+    latencyChart.updateSeries(
         [
             {
                 data: WTLatencyData
@@ -249,6 +253,17 @@ function StatsErase(){
             }
         ]
     )
+
+    throughputChart.updateSeries(
+      [
+          {
+              data: WTThroughputData
+          },
+          {
+              data: WSThroughputData
+          }
+      ]
+  )
 
     size = 0
     StatsCompute()
